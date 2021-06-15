@@ -46,16 +46,10 @@ function setEsbuildBinaryPath() {
 setEsbuildBinaryPath()
 
 /**
- * remark plugin which removes all import and export statements
+ * Remark plugin which removes all import and export statements
  */
-const removeImportsExportsPlugin: Plugin = () => (tree) => {
-  console.log('REMOVING ESM!')
-  // https://github.com/mdx-js/mdx/blob/5169bf1f5d7b730b6f20a5eecee0b9ea0d977e56/packages/remark-mdx-remove-exports/readme.md
-  remove(tree, ['mdxjsEsm'])
-  console.log(tree)
-  return tree
-}
 const removeEsm = () => (tree: any) => remove(tree, 'mdxjsEsm')
+
 /**
  * Parses and compiles the provided MDX string. Returns a result which can be passed into <MDXRemote /> to be rendered.
  */
@@ -68,28 +62,18 @@ export async function serialize(
     target = ['es2020', 'node12'],
   }: SerializeOptions = {}
 ): Promise<MDXRemoteSerializeResult> {
-  // mdxOptions.remarkPlugins = [
-  //   ...(mdxOptions.remarkPlugins || []),
-  //   removeImportsExportsPlugin,
-  // ]
-  try {
-    console.log('MDX COMPILE!', source, mdxOptions)
-    const compiledMdx = mdx.sync(source, {
-      skipExport: true,
-      remarkPlugins: [removeEsm],
-    })
-    console.log('COMPILED!', compiledMdx)
-    const transformResult = await transform(compiledMdx, {
-      loader: 'jsx',
-      jsxFactory: 'mdx',
-      minify: true,
-      target,
-    })
-    return {
-      compiledSource: transformResult.code,
-      scope,
-    }
-  } catch (e) {
-    console.log('e', e)
+  const compiledMdx = mdx.sync(source, {
+    skipExport: true,
+    remarkPlugins: [...(mdxOptions.remarkPlugins || []), removeEsm],
+  })
+  const transformResult = await transform(compiledMdx, {
+    loader: 'jsx',
+    jsxFactory: 'mdx',
+    minify: true,
+    target,
+  })
+  return {
+    compiledSource: transformResult.code,
+    scope,
   }
 }

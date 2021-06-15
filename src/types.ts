@@ -1,5 +1,4 @@
 import mdx from '@mdx-js/mdx'
-import { Pluggable, Compiler } from 'unified'
 export interface SerializeOptions {
   /**
    * Pass-through variables for use in the MDX content
