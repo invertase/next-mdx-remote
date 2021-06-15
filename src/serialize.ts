@@ -5,7 +5,6 @@ import pkgDir from 'pkg-dir'
 import { remove } from 'unist-util-remove'
 
 // types
-import { Plugin } from 'unified'
 import { MDXRemoteSerializeResult, SerializeOptions } from './types'
 
 /**
@@ -63,6 +62,7 @@ export async function serialize(
   }: SerializeOptions = {}
 ): Promise<MDXRemoteSerializeResult> {
   const compiledMdx = mdx.sync(source, {
+    ...mdxOptions,
     skipExport: true,
     remarkPlugins: [...(mdxOptions.remarkPlugins || []), removeEsm],
   })
