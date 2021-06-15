@@ -224,7 +224,6 @@ function buildFixture(fixture: string) {
     cwd: path.join(__dirname, 'fixtures', fixture),
     env: { ...process.env, NODE_ENV: undefined, __NEXT_TEST_MODE: 'true' },
   })
-  process.exit()
 }
 
 function readOutputFile(fixture: string, name: string) {
