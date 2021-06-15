@@ -256,6 +256,7 @@ async function renderStatic(
   } & SerializeOptions = {}
 ): Promise<string> {
   const mdxSource = await serialize(mdx, { mdxOptions, target })
+
   return ReactDOMServer.renderToStaticMarkup(
     <MDXRemote {...mdxSource} components={components} scope={scope} />
   )
